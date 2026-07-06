@@ -1,7 +1,7 @@
-#define MyAppName "HyoT Image Tools"
+#define MyAppName "HyoImage"
 #define MyAppVersion "1.0.1"
 #define MyAppPublisher "HyoT"
-#define MyAppExeName "HyoT-Image-Tools.exe"
+#define MyAppExeName "HyoImage.exe"
 
 [Setup]
 AppId={{A3B8F2E1-4C5D-6E7F-8091-A2B3C4D5E6F7}
@@ -10,7 +10,7 @@ AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 DefaultDirName={autopf}\HyoT\ImageTools
 DefaultGroupName={#MyAppName}
-OutputBaseFilename=HyoT-Image-Tools-1.0.1-x64-setup
+OutputBaseFilename=HyoImage-1.0.1-x64-setup
 OutputDir=..\dist
 Compression=lzma2/ultra64
 SolidCompression=yes
@@ -28,7 +28,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "launchapp"; Description: "Launch {#MyAppName}"; GroupDescription: "Finish:"; Flags: unchecked
 
 [Files]
-Source: "..\dist\HyoT-Image-Tools\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\dist\HyoImage\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

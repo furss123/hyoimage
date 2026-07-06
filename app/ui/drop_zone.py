@@ -26,6 +26,8 @@ from PyQt6.QtWidgets import (
 )
 
 from app.models.file_item import FileItem
+from app.settings import load_settings
+from app.ui.theme import get_theme_color
 from app.utils.i18n import tr
 
 IMAGE_EXTENSIONS = {
@@ -46,13 +48,13 @@ _IMAGE_FILTER = ";;".join(
     ]
 )
 
-_EMPTY_HEIGHT = 188
-_WITH_FILES_HEIGHT = 180
-_THUMB_SIZE = 64
+_EMPTY_HEIGHT = 152
+_WITH_FILES_HEIGHT = 148
+_THUMB_SIZE = 56
 _MAX_VISIBLE_THUMBS = 4
-_DROP_ICON_SIZE = 72
-_ICON_FRAME_WIDTH = 96
-_ICON_FRAME_HEIGHT = 84
+_DROP_ICON_SIZE = 52
+_ICON_FRAME_WIDTH = 72
+_ICON_FRAME_HEIGHT = 64
 
 
 def _make_drop_icon_pixmap(color: QColor, size: int = _DROP_ICON_SIZE) -> QPixmap:
@@ -184,12 +186,12 @@ class _DropContent(QFrame):
 
         self._empty_widget = QWidget()
         empty_layout = QVBoxLayout(self._empty_widget)
-        empty_layout.setContentsMargins(16, 18, 16, 18)
+        empty_layout.setContentsMargins(16, 12, 16, 12)
         empty_layout.setSpacing(0)
-        empty_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self._icon_frame = QWidget()
         self._icon_frame.setObjectName("dropIconFrame")
+        self._icon_frame.setFixedSize(_ICON_FRAME_WIDTH, _ICON_FRAME_HEIGHT)
         icon_frame_layout = QVBoxLayout(self._icon_frame)
         icon_frame_layout.setContentsMargins(0, 0, 0, 0)
         icon_frame_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -199,21 +201,24 @@ class _DropContent(QFrame):
         self._icon.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._icon.setFixedSize(_DROP_ICON_SIZE, _DROP_ICON_SIZE)
         icon_frame_layout.addWidget(self._icon)
+
+        empty_layout.addStretch(1)
         empty_layout.addWidget(self._icon_frame, alignment=Qt.AlignmentFlag.AlignHCenter)
-        empty_layout.addSpacing(20)
+        empty_layout.addSpacing(12)
 
         self._hint = QLabel()
         self._hint.setObjectName("dropHint")
         self._hint.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self._hint.setWordWrap(False)
-        empty_layout.addWidget(self._hint)
-        empty_layout.addSpacing(10)
+        self._hint.setWordWrap(True)
+        empty_layout.addWidget(self._hint, alignment=Qt.AlignmentFlag.AlignHCenter)
+        empty_layout.addSpacing(6)
 
         self._sub_hint = QLabel()
         self._sub_hint.setObjectName("dropSubHint")
         self._sub_hint.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self._sub_hint.setWordWrap(False)
-        empty_layout.addWidget(self._sub_hint)
+        self._sub_hint.setWordWrap(True)
+        empty_layout.addWidget(self._sub_hint, alignment=Qt.AlignmentFlag.AlignHCenter)
+        empty_layout.addStretch(1)
 
         layout.addWidget(self._empty_widget, 1)
 
@@ -246,10 +251,13 @@ class _DropContent(QFrame):
         self._update_icon_color()
 
     def _update_icon_color(self) -> None:
-        color = self._sub_hint.palette().color(self._sub_hint.foregroundRole())
-        if not color.isValid():
-            color = QColor("#808080")
+        theme = load_settings().theme
+        color = QColor(get_theme_color(theme, "text_3"))
         self._icon.setPixmap(_make_drop_icon_pixmap(color))
+
+    def showEvent(self, event) -> None:
+        super().showEvent(event)
+        self._update_icon_color()
 
     def update_drop_zone(self, files: list[FileItem]) -> None:
         while self._thumb_row.count():

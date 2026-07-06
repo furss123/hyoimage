@@ -1,3 +1,19 @@
+BRAND = {
+    "blue": "#006EE4",
+    "purple": "#8429D3",
+    "orange": "#FF6000",
+    "teal": "#008684",
+}
+
+_TOOL_ACCENT_CYCLE = [BRAND["blue"], BRAND["purple"], BRAND["orange"], BRAND["teal"]]
+
+TOOL_ACCENT = {
+    tool_id: _TOOL_ACCENT_CYCLE[i % len(_TOOL_ACCENT_CYCLE)]
+    for i, tool_id in enumerate(
+        ["resize", "compress", "convert", "rotate", "crop", "merge", "bulk_rename"]
+    )
+}
+
 DARK = {
     "window": "#1A1A1A",
     "sidebar": "#111111",
@@ -9,14 +25,14 @@ DARK = {
     "text_2": "#909090",
     "text_3": "#505050",
     "opt_label": "#707070",
-    "accent": "#1976D2",
-    "accent_hover": "#1565C0",
-    "accent_tint": "rgba(25, 118, 210, 0.12)",
+    "accent": "#006EE4",
+    "accent_hover": "#0057B3",
+    "accent_tint": "rgba(0, 110, 228, 0.12)",
     "list_item": "#606060",
     "list_hover_bg": "rgba(255, 255, 255, 0.05)",
     "list_hover_text": "#B0B0B0",
-    "list_selected_bg": "rgba(25, 118, 210, 0.12)",
-    "list_selected_text": "#1976D2",
+    "list_selected_bg": "rgba(0, 110, 228, 0.12)",
+    "list_selected_text": "#006EE4",
     "header_desc": "#888888",
     "sidebar_title": "#444444",
     "tool_header_bg": "#1A1A1A",
@@ -24,15 +40,15 @@ DARK = {
     "drop_border": "#2A2A2A",
     "drop_zone_border": "#666666",
     "drop_icon_bg": "#1C1C1C",
-    "drop_hover_bg": "rgba(25, 118, 210, 0.03)",
-    "drop_hover_border": "rgba(25, 118, 210, 0.22)",
+    "drop_hover_bg": "rgba(0, 110, 228, 0.03)",
+    "drop_hover_border": "rgba(0, 110, 228, 0.22)",
     "input_bg": "#1E1E1E",
     "input_border": "#333333",
     "input_focus_bg": "#222222",
     "input_text": "#E8E8E8",
     "combo_popup_bg": "#1E1E1E",
     "combo_popup_border": "#2E2E2E",
-    "selection_bg": "rgba(25, 118, 210, 0.12)",
+    "selection_bg": "rgba(0, 110, 228, 0.12)",
     "btn_bg": "#1E1E1E",
     "btn_border": "#2E2E2E",
     "btn_text": "#808080",
@@ -41,9 +57,9 @@ DARK = {
     "btn_hover_text": "#D0D0D0",
     "quick_rotate_border": "#282828",
     "quick_rotate_text": "#606060",
-    "quick_rotate_hover_bg": "rgba(25, 118, 210, 0.12)",
-    "quick_rotate_hover_border": "rgba(25, 118, 210, 0.38)",
-    "quick_rotate_hover_text": "#1976D2",
+    "quick_rotate_hover_bg": "rgba(0, 110, 228, 0.12)",
+    "quick_rotate_hover_border": "rgba(0, 110, 228, 0.38)",
+    "quick_rotate_hover_text": "#006EE4",
     "file_btn_border": "#262626",
     "file_btn_text": "#505050",
     "file_btn_hover_bg": "#1E1E1E",
@@ -86,14 +102,14 @@ LIGHT = {
     "text_2": "#666666",
     "text_3": "#BBBBBB",
     "opt_label": "#666666",
-    "accent": "#1976D2",
-    "accent_hover": "#1565C0",
-    "accent_tint": "rgba(25, 118, 210, 0.12)",
+    "accent": "#006EE4",
+    "accent_hover": "#0057B3",
+    "accent_tint": "rgba(0, 110, 228, 0.12)",
     "list_item": "#666666",
     "list_hover_bg": "rgba(0, 0, 0, 0.04)",
     "list_hover_text": "#333333",
-    "list_selected_bg": "rgba(25, 118, 210, 0.12)",
-    "list_selected_text": "#1976D2",
+    "list_selected_bg": "rgba(0, 110, 228, 0.12)",
+    "list_selected_text": "#006EE4",
     "header_desc": "#888888",
     "sidebar_title": "#BBBBBB",
     "tool_header_bg": "#F5F5F5",
@@ -101,15 +117,15 @@ LIGHT = {
     "drop_border": "#D8D8D8",
     "drop_zone_border": "#999999",
     "drop_icon_bg": "#F0F0F0",
-    "drop_hover_bg": "rgba(25, 118, 210, 0.04)",
-    "drop_hover_border": "rgba(25, 118, 210, 0.28)",
+    "drop_hover_bg": "rgba(0, 110, 228, 0.04)",
+    "drop_hover_border": "rgba(0, 110, 228, 0.28)",
     "input_bg": "#FFFFFF",
     "input_border": "#E0E0E0",
     "input_focus_bg": "#FFFFFF",
     "input_text": "#111111",
     "combo_popup_bg": "#FFFFFF",
     "combo_popup_border": "#E4E4E4",
-    "selection_bg": "rgba(25, 118, 210, 0.12)",
+    "selection_bg": "rgba(0, 110, 228, 0.12)",
     "btn_bg": "#FFFFFF",
     "btn_border": "#E4E4E4",
     "btn_text": "#666666",
@@ -118,9 +134,9 @@ LIGHT = {
     "btn_hover_text": "#111111",
     "quick_rotate_border": "#E0E0E0",
     "quick_rotate_text": "#666666",
-    "quick_rotate_hover_bg": "rgba(25, 118, 210, 0.12)",
-    "quick_rotate_hover_border": "rgba(25, 118, 210, 0.38)",
-    "quick_rotate_hover_text": "#1976D2",
+    "quick_rotate_hover_bg": "rgba(0, 110, 228, 0.12)",
+    "quick_rotate_hover_border": "rgba(0, 110, 228, 0.38)",
+    "quick_rotate_hover_text": "#006EE4",
     "file_btn_border": "#E4E4E4",
     "file_btn_text": "#888888",
     "file_btn_hover_bg": "#F5F5F5",
@@ -151,6 +167,15 @@ LIGHT = {
     "delete_btn_hover_bg": "rgba(229, 115, 115, 0.12)",
     "color_checkbox_border": "#BBBBBB",
 }
+
+
+def get_theme_color(theme: str, key: str) -> str:
+    palette = LIGHT if theme == "light" else DARK
+    return palette[key]
+
+
+def get_tool_accent(tool_id: str) -> str:
+    return TOOL_ACCENT.get(tool_id, BRAND["blue"])
 
 
 def get_stylesheet(theme: str) -> str:
@@ -212,7 +237,10 @@ QListWidget::item:selected {{
     background: {t["list_selected_bg"]};
     color: {t["list_selected_text"]};
     font-weight: 600;
-    border-left: 3px solid {t["accent"]};
+}}
+
+QListWidget::item:focus {{
+    outline: none;
 }}
 
 QWidget#toolContent {{
@@ -281,10 +309,10 @@ QFrame#dropZone:hover {{
 QWidget#dropIconFrame {{
     background: {t["drop_icon_bg"]};
     border-radius: 10px;
-    min-width: 96px;
-    max-width: 96px;
-    min-height: 84px;
-    max-height: 84px;
+    min-width: 72px;
+    max-width: 72px;
+    min-height: 64px;
+    max-height: 64px;
 }}
 
 QLabel#dropIcon {{
@@ -417,7 +445,7 @@ QPushButton:hover {{
 }}
 
 QPushButton#convertBtn {{
-    background: {t["accent"]};
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 {BRAND["blue"]}, stop:1 {BRAND["purple"]});
     border: none;
     color: #FFFFFF;
     font-size: 14px;
@@ -430,17 +458,19 @@ QPushButton#convertBtn {{
 }}
 
 QPushButton#convertBtn:hover {{
-    background: {t["accent_hover"]};
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 {t["accent_hover"]}, stop:1 #6B20A8);
 }}
 
 QPushButton#primary {{
     background: {t["accent"]};
     border: none;
     color: #FFFFFF;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     border-radius: 8px;
-    padding: 8px 20px;
+    padding: 6px 18px;
+    min-height: 32px;
+    max-height: 32px;
 }}
 
 QPushButton#primary:hover {{
@@ -454,8 +484,7 @@ QPushButton#quickRotate {{
     color: {t["quick_rotate_text"]};
     font-size: 12px;
     min-height: 30px;
-    max-height: 30px;
-    padding: 0 10px;
+    padding: 4px 10px;
 }}
 
 QPushButton#quickRotate:hover {{
@@ -637,8 +666,7 @@ QCheckBox#colorOptionCheckbox::indicator:checked {{
 QWidget#outputBar {{
     background: {t["output_bar_bg"]};
     border-top: 1px solid {t["output_bar_border"]};
-    padding: 8px 12px;
-    min-height: 64px;
+    padding: 0;
 }}
 
 QLabel#outputLabel {{
@@ -655,11 +683,12 @@ QLabel#previewLabel {{
 }}
 
 QLabel#resultPreview {{
-    background: {t["drop_bg"]};
-    border: 1.5px dashed {t["drop_border"]};
+    background: {t["surface"]};
+    border: 1px solid {t["divider"]};
     border-radius: 8px;
     color: {t["text_3"]};
-    min-height: 160px;
+    min-height: 120px;
+    padding: 8px;
 }}
 
 QWidget#progressPanel {{
@@ -728,9 +757,14 @@ QPlainTextEdit {{
 QTableWidget {{
     background: transparent;
     border: none;
-    gridline-color: {t["table_grid"]};
+    gridline-color: transparent;
     font-size: 12px;
     color: {t["table_text"]};
+}}
+
+QTableWidget#bulkPreviewTable {{
+    border: 1px solid {t["divider"]};
+    border-radius: 8px;
 }}
 
 QHeaderView::section {{

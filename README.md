@@ -1,10 +1,10 @@
-# HyoT Image Tools
+# HyoImage
 
 <p align="center">
-  <img src="app/assets/icon.png" alt="HyoT Image Tools" width="96" height="96">
+  <img src="app/assets/icon.png" alt="HyoImage" width="96" height="96">
 </p>
 
-**Batch image processing for Windows** — resize, compress, convert, crop, rotate, merge, and rename photos in one desktop app.
+**Batch image processing for Windows** — resize, compress, convert, crop, rotate, merge, and rename photos in one desktop app. Every tool in the sidebar carries its own color from the HyoT brand palette (blue, purple, orange, teal), so you always know at a glance which tool you're in.
 
 ![Main window](screenshots/main.png)
 
@@ -38,8 +38,8 @@ Additional highlights:
 ## Install & run
 
 ```bash
-git clone https://github.com/furss123/hyot-image-tools.git
-cd HyoT-Image-Tools
+git clone https://github.com/furss123/hyoimage.git
+cd hyoimage
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt

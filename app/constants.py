@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-APP_NAME = "HyoT Image Tools"
+APP_NAME = "HyoImage"
 APP_VERSION = "1.0.1"
 
 APPDATA_DIR = Path(os.getenv("APPDATA")) / "HyoT" / "ImageTools"

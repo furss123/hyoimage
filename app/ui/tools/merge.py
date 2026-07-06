@@ -128,9 +128,8 @@ class MergeToolWidget(BaseToolWidget):
         self._opt_row(tr("merge_format"), self._format_combo)
 
         bg_widget = QWidget()
-        bg_widget.setMinimumHeight(52)
         bl = QHBoxLayout(bg_widget)
-        bl.setContentsMargins(0, 6, 0, 6)
+        bl.setContentsMargins(0, 0, 0, 0)
         bl.setSpacing(8)
         bl.setAlignment(Qt.AlignmentFlag.AlignVCenter)
 
@@ -163,14 +162,13 @@ class MergeToolWidget(BaseToolWidget):
         bl.addWidget(self._bg_image_clear)
         bl.addStretch()
 
-        self._bg_row = self._opt_row(tr("merge_bg"), bg_widget)
-        self._bg_row.setFixedHeight(52)
+        self._bg_row = self._opt_row(tr("merge_bg"), bg_widget, min_height=48)
         self._update_bg_swatch()
 
     def _update_bg_swatch(self) -> None:
         self._bg_btn.setStyleSheet(
             f"background: {self._bg_color}; "
-            f"border: 1px solid #555555; border-radius: 4px; padding: 0;"
+            f"border: 1px solid rgba(128, 128, 128, 0.45); border-radius: 4px; padding: 0;"
         )
 
     def _pick_bg_color(self) -> None:
@@ -192,7 +190,7 @@ class MergeToolWidget(BaseToolWidget):
                 "x1:0,y1:0,x2:1,y2:1,"
                 "stop:0 #ffffff,stop:0.49 #ffffff,"
                 "stop:0.5 #cccccc,stop:1 #cccccc);"
-                "border: 1px solid #555555; border-radius: 4px; padding: 0;"
+                "border: 1px solid rgba(128, 128, 128, 0.45); border-radius: 4px; padding: 0;"
             )
             self._bg_image_path = None
             self._bg_image_clear.setVisible(False)

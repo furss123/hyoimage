@@ -57,12 +57,13 @@ class ConvertToolWidget(BaseToolWidget):
             self._quality_btns.append(btn)
 
         self._quality_btns[3].setChecked(True)
-        self._quality_row = self._opt_row(tr("convert_quality"), quality_widget)
+        self._quality_row = self._opt_row(
+            tr("convert_quality"), quality_widget, min_height=48
+        )
 
         bg_widget = QWidget()
-        bg_widget.setMinimumHeight(52)
         bl = QHBoxLayout(bg_widget)
-        bl.setContentsMargins(0, 6, 0, 6)
+        bl.setContentsMargins(0, 0, 0, 0)
         bl.setSpacing(8)
         bl.setAlignment(Qt.AlignmentFlag.AlignVCenter)
 
@@ -83,8 +84,9 @@ class ConvertToolWidget(BaseToolWidget):
         bl.addWidget(self._bg_btn)
         bl.addWidget(self._transparent_cb)
         bl.addStretch()
-        self._bg_row = self._opt_row(tr("convert_bg_color"), bg_widget)
-        self._bg_row.setFixedHeight(52)
+        self._bg_row = self._opt_row(
+            tr("convert_bg_color"), bg_widget, min_height=48
+        )
 
         from app.ui.widgets.result_preview import ResultPreviewWidget
 
@@ -132,7 +134,7 @@ class ConvertToolWidget(BaseToolWidget):
     def _update_bg_swatch(self) -> None:
         self._bg_btn.setStyleSheet(
             f"background: {self._bg_color}; "
-            f"border: 1px solid #555555; border-radius: 4px; padding: 0;"
+            f"border: 1px solid rgba(128, 128, 128, 0.45); border-radius: 4px; padding: 0;"
         )
 
     def _pick_color(self) -> None:
@@ -150,7 +152,7 @@ class ConvertToolWidget(BaseToolWidget):
                 "x1:0,y1:0,x2:1,y2:1,"
                 "stop:0 #ffffff,stop:0.5 #cccccc,"
                 "stop:0.5 #999999,stop:1 #666666);"
-                "border: 1px solid #555555; border-radius: 4px; padding: 0;"
+                "border: 1px solid rgba(128, 128, 128, 0.45); border-radius: 4px; padding: 0;"
             )
         else:
             self._update_bg_swatch()

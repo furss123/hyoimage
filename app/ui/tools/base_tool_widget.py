@@ -1,6 +1,6 @@
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
-    QFrame,
+    QCheckBox,
     QHBoxLayout,
     QLabel,
     QPushButton,
@@ -13,6 +13,9 @@ from app.ui.drop_zone import DropZone
 from app.utils.i18n import tr
 
 TOOL_CONTENT_HORIZONTAL_MARGIN = 24
+_OPT_LABEL_WIDTH = 120
+_OPT_LABEL_SPACING = 16
+_OPT_CONTROL_OFFSET = _OPT_LABEL_WIDTH + _OPT_LABEL_SPACING
 
 
 class BaseToolWidget(QWidget):
@@ -40,9 +43,9 @@ class BaseToolWidget(QWidget):
         self._layout = QVBoxLayout(self._body)
         self._layout.setContentsMargins(
             TOOL_CONTENT_HORIZONTAL_MARGIN,
-            16,
+            12,
             TOOL_CONTENT_HORIZONTAL_MARGIN,
-            16,
+            12,
         )
         self._layout.setSpacing(0)
         self._layout.setAlignment(Qt.AlignmentFlag.AlignTop)
@@ -51,7 +54,7 @@ class BaseToolWidget(QWidget):
         self._layout.addWidget(self.drop_zone)
 
         btn_row = QHBoxLayout()
-        btn_row.setContentsMargins(0, 8, 0, 16)
+        btn_row.setContentsMargins(0, 6, 0, 10)
         btn_row.setSpacing(6)
         self._add_btn = QPushButton()
         self._add_btn.setObjectName("fileBtn")
@@ -75,8 +78,8 @@ class BaseToolWidget(QWidget):
         )
         self._options_layout = QVBoxLayout(self._options_wrap)
         self._options_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self._options_layout.setSpacing(18)
-        self._options_layout.setContentsMargins(20, 16, 20, 16)
+        self._options_layout.setSpacing(12)
+        self._options_layout.setContentsMargins(16, 10, 16, 10)
         self._layout.addWidget(self._options_wrap)
 
         self._preview_area = QWidget()
@@ -95,9 +98,6 @@ class BaseToolWidget(QWidget):
 
         self._content = self._body
         self._content_wrapper = self._body
-
-        self.show()
-        self.setVisible(True)
 
     @property
     def main_layout(self) -> QVBoxLayout:
@@ -136,25 +136,33 @@ class BaseToolWidget(QWidget):
         self._page_title = title
         self._page_desc = desc
 
-    def _opt_row(self, label: str, widget: QWidget) -> QWidget:
+    def _opt_row(
+        self, label: str, widget: QWidget, *, min_height: int = 44
+    ) -> QWidget:
         row = QWidget()
         row.setObjectName("optionRow")
-        row.setFixedHeight(52)
+        row.setMinimumHeight(min_height)
         hl = QHBoxLayout(row)
         hl.setContentsMargins(0, 0, 0, 0)
-        hl.setSpacing(16)
+        hl.setSpacing(_OPT_LABEL_SPACING)
         lbl = QLabel(label)
         lbl.setObjectName("optLabel")
-        lbl.setFixedWidth(120)
+        lbl.setFixedWidth(_OPT_LABEL_WIDTH)
         lbl.setAlignment(
             Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft
         )
         hl.addWidget(lbl)
         hl.addWidget(widget, stretch=1)
         self._options_layout.addWidget(row)
-        div = QFrame()
-        div.setObjectName("divider")
-        div.setFrameShape(QFrame.Shape.HLine)
-        div.setFixedHeight(1)
-        self._options_layout.addWidget(div)
         return row
+
+    def _add_option_checkbox(self, checkbox: QCheckBox) -> None:
+        row = QWidget()
+        row.setObjectName("optionRow")
+        row.setMinimumHeight(32)
+        hl = QHBoxLayout(row)
+        hl.setContentsMargins(_OPT_CONTROL_OFFSET, 0, 0, 0)
+        hl.setSpacing(0)
+        hl.addWidget(checkbox)
+        hl.addStretch()
+        self._options_layout.addWidget(row)

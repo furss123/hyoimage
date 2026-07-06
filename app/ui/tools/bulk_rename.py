@@ -46,6 +46,7 @@ class BulkRenameToolWidget(BaseToolWidget):
         preview_layout.addWidget(self._pattern_lbl)
 
         self._preview_table = QTableWidget(0, 2)
+        self._preview_table.setObjectName("bulkPreviewTable")
         self._preview_table.setHorizontalHeaderLabels(["", ""])
         header = self._preview_table.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
@@ -53,10 +54,9 @@ class BulkRenameToolWidget(BaseToolWidget):
         self._preview_table.setEditTriggers(
             QAbstractItemView.EditTrigger.NoEditTriggers
         )
-        self._preview_table.setShowGrid(True)
-        self._preview_table.setFrameShape(QFrame.Shape.Box)
-        self._preview_table.setLineWidth(1)
-        self._preview_table.setMinimumHeight(200)
+        self._preview_table.setShowGrid(False)
+        self._preview_table.setFrameShape(QFrame.Shape.NoFrame)
+        self._preview_table.setMinimumHeight(140)
         self._preview_table.setSizePolicy(
             QSizePolicy.Policy.Expanding,
             QSizePolicy.Policy.Expanding,

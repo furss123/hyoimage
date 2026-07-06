@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / "dist"
 BUILD = ROOT / "build"
-OUTPUT = DIST / "HyoT-Image-Tools"
+OUTPUT = DIST / "HyoImage"
 
 
 def _format_size(size_bytes: int) -> str:

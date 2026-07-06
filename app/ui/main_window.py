@@ -7,11 +7,11 @@ import sys
 from pathlib import Path
 
 from PyQt6.QtGui import QGuiApplication
-from PyQt6.QtCore import QPropertyAnimation, Qt, QTimer
+from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtWidgets import (
     QApplication,
-    QGraphicsOpacityEffect,
     QHBoxLayout,
+    QLabel,
     QMainWindow,
     QMessageBox,
     QPushButton,
@@ -38,7 +38,10 @@ from app.utils.notify import play_completion_sound
 
 _PREVIEW_TOOLS = frozenset({"resize", "rotate", "merge"})
 _HEADER_BTN_SIZE = 40
-_TOOL_FADE_MS = 150
+_DEFAULT_WIDTH = 960
+_MIN_WINDOW_WIDTH = 880
+_MIN_WINDOW_HEIGHT = 560
+_HD_MAX_WINDOW_HEIGHT = 820
 
 
 class _HeaderBarButton(QPushButton):
@@ -78,9 +81,6 @@ class MainWindow(QMainWindow):
         self._tool_widgets: dict[str, QWidget] = {}
         self._tool_indices: dict[str, int] = {}
         self._worker: ConversionWorker | None = None
-        self._pending_tool_id: str | None = None
-        self._tool_switch_animating = False
-        self._initial_tool_shown = False
         self._initial_tool_id = (
             settings.last_tool
             if settings.last_tool in TOOL_IDS
@@ -89,8 +89,8 @@ class MainWindow(QMainWindow):
         self._build_ui()
         QTimer.singleShot(0, self._load_window_icon)
         self.setWindowTitle(tr("app_title"))
-        self.setMinimumSize(880, 600)
-        self.resize(980, 1040)
+        self.setMinimumSize(_MIN_WINDOW_WIDTH, _MIN_WINDOW_HEIGHT)
+        self._apply_initial_geometry()
         central_layout = self.centralWidget().layout()
         if central_layout is not None:
             central_layout.setContentsMargins(0, 0, 0, 0)
@@ -102,6 +102,19 @@ class MainWindow(QMainWindow):
             app.setStyleSheet(get_stylesheet(settings.theme))
         self.retranslate()
         QTimer.singleShot(0, self._deferred_startup)
+
+    def _apply_initial_geometry(self) -> None:
+        screen = QGuiApplication.primaryScreen()
+        if screen is None:
+            self.resize(_DEFAULT_WIDTH, 760)
+            return
+        geo = screen.availableGeometry()
+        width = min(_DEFAULT_WIDTH + 20, max(_MIN_WINDOW_WIDTH, geo.width() - 64))
+        height = min(
+            _HD_MAX_WINDOW_HEIGHT,
+            max(_MIN_WINDOW_HEIGHT, int(geo.height() * 0.78)),
+        )
+        self.resize(width, height)
 
     def _load_window_icon(self) -> None:
         app_icon = load_app_icon()
@@ -161,11 +174,22 @@ class MainWindow(QMainWindow):
 
         self._tool_header = QWidget()
         self._tool_header.setObjectName("toolHeader")
-        self._tool_header.setFixedHeight(52)
+        self._tool_header.setFixedHeight(48)
         header_layout = QHBoxLayout(self._tool_header)
-        header_layout.setContentsMargins(24, 6, 24, 6)
-        header_layout.setSpacing(8)
+        header_layout.setContentsMargins(24, 4, 24, 4)
+        header_layout.setSpacing(12)
         header_layout.setAlignment(Qt.AlignmentFlag.AlignVCenter)
+
+        title_col = QVBoxLayout()
+        title_col.setContentsMargins(0, 0, 0, 0)
+        title_col.setSpacing(0)
+        self._header_title = QLabel()
+        self._header_title.setObjectName("toolHeaderTitle")
+        self._header_desc = QLabel()
+        self._header_desc.setObjectName("toolHeaderDesc")
+        title_col.addWidget(self._header_title)
+        title_col.addWidget(self._header_desc)
+        header_layout.addLayout(title_col)
         header_layout.addStretch(1)
 
         self._lang_btn = _HeaderBarButton()
@@ -193,7 +217,6 @@ class MainWindow(QMainWindow):
         )
 
         right_layout.addWidget(self.stacked_widget, 1)
-        self._setup_tool_fade_animation()
 
         self.progress_panel = ProgressPanel()
         self.progress_panel.cancel_requested.connect(self._on_cancel)
@@ -205,21 +228,6 @@ class MainWindow(QMainWindow):
         self.output_bar = OutputBar()
         self.output_bar.run_requested.connect(self._on_run_requested)
         main_layout.addWidget(self.output_bar, stretch=0)
-
-    def _setup_tool_fade_animation(self) -> None:
-        self._stack_opacity = QGraphicsOpacityEffect(self.stacked_widget)
-        self._stack_opacity.setOpacity(1.0)
-        self.stacked_widget.setGraphicsEffect(self._stack_opacity)
-
-        self._fade_out = QPropertyAnimation(self._stack_opacity, b"opacity")
-        self._fade_out.setDuration(_TOOL_FADE_MS)
-        self._fade_out.setStartValue(1.0)
-        self._fade_out.setEndValue(0.0)
-
-        self._fade_in = QPropertyAnimation(self._stack_opacity, b"opacity")
-        self._fade_in.setDuration(_TOOL_FADE_MS)
-        self._fade_in.setStartValue(0.0)
-        self._fade_in.setEndValue(1.0)
 
     def _create_tool_widget(self, tool_id: str) -> QWidget:
         module = importlib.import_module(f"app.ui.tools.{tool_id}")
@@ -398,6 +406,11 @@ class MainWindow(QMainWindow):
         elif fail > 0:
             Toast(self, tr("toast_error"), success=False)
 
+    def _update_tool_header(self, tool_id: str) -> None:
+        self._header_title.setText(tr(tool_id))
+        desc_key = f"{tool_id}_desc"
+        self._header_desc.setText(tr(desc_key))
+
     def _apply_tool_switch(self, tool_id: str) -> None:
         old = self._current_tool_widget()
         if old is not None:
@@ -405,62 +418,21 @@ class MainWindow(QMainWindow):
         widget = self._ensure_tool_widget(tool_id)
         if widget is None:
             return
+        self._update_tool_header(tool_id)
         self.stacked_widget.setCurrentWidget(widget)
-        widget.show()
-        widget.setVisible(True)
         self.sidebar.set_active(tool_id)
         self.settings.last_tool = tool_id
         save_settings(self.settings)
 
-    def _start_tool_fade_out(self) -> None:
-        self._fade_out.stop()
-        self._fade_in.stop()
-        self._fade_out.setStartValue(self._stack_opacity.opacity())
-        self._fade_out.setEndValue(0.0)
-        self._fade_out.finished.connect(self._on_tool_fade_out_finished)
-        self._fade_out.start()
-
-    def _on_tool_fade_out_finished(self) -> None:
-        self._fade_out.finished.disconnect(self._on_tool_fade_out_finished)
-        if self._pending_tool_id is not None:
-            self._apply_tool_switch(self._pending_tool_id)
-        self._fade_in.setStartValue(0.0)
-        self._fade_in.setEndValue(1.0)
-        self._fade_in.finished.connect(self._on_tool_fade_in_finished)
-        self._fade_in.start()
-
-    def _on_tool_fade_in_finished(self) -> None:
-        self._fade_in.finished.disconnect(self._on_tool_fade_in_finished)
-        self._tool_switch_animating = False
-        self._stack_opacity.setOpacity(1.0)
-        pending = self._pending_tool_id
-        current = self._current_tool_id()
-        if pending is not None and pending != current:
-            self._tool_switch_animating = True
-            self._start_tool_fade_out()
-
     def _on_tool_selected(self, tool_id: str) -> None:
         if tool_id not in TOOL_IDS:
-            return
-
-        if not self._initial_tool_shown:
-            self._initial_tool_shown = True
-            self._stack_opacity.setOpacity(1.0)
-            self._apply_tool_switch(tool_id)
             return
 
         if self._current_tool_id() == tool_id:
             self.sidebar.set_active(tool_id)
             return
 
-        self._pending_tool_id = tool_id
-        self.sidebar.set_active(tool_id)
-
-        if self._tool_switch_animating:
-            return
-
-        self._tool_switch_animating = True
-        self._start_tool_fade_out()
+        self._apply_tool_switch(tool_id)
 
     def _on_theme_toggle(self) -> None:
         new_theme = "light" if self.settings.theme == "dark" else "dark"
@@ -487,6 +459,9 @@ class MainWindow(QMainWindow):
 
     def retranslate(self) -> None:
         self.setWindowTitle(tr("app_title"))
+        tool_id = self._current_tool_id()
+        if tool_id is not None:
+            self._update_tool_header(tool_id)
         self.sidebar.retranslate()
         self.output_bar.retranslate()
         self.progress_panel.retranslate()

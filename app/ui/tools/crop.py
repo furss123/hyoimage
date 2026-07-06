@@ -73,7 +73,7 @@ class CropToolWidget(BaseToolWidget):
         ec.setSpacing(8)
 
         self._canvas = CropCanvas()
-        self._canvas.setMinimumHeight(300)
+        self._canvas.setMinimumHeight(220)
         ec.addWidget(self._canvas, stretch=1)
 
         ctrl = QHBoxLayout()
@@ -138,7 +138,7 @@ class CropToolWidget(BaseToolWidget):
         ec.addWidget(self._info_lbl)
 
         self._empty_preview = ResultPreviewWidget()
-        self._empty_preview._label.setMinimumHeight(200)
+        self._empty_preview._label.setMinimumHeight(120)
         self.add_preview(self._empty_preview)
 
         self.add_preview(self._editor_container)

@@ -1,4 +1,4 @@
-# HyoT Image Tools — Development Context
+# HyoImage — Development Context
 
 Last updated: 2026-06-28
 
@@ -6,12 +6,12 @@ Last updated: 2026-06-28
 
 | Repo | URL | Purpose |
 |------|-----|---------|
-| **hyot-image-tools** | https://github.com/furss123/hyot-image-tools | Application source, releases |
+| **hyoimage** | https://github.com/furss123/hyoimage | Application source, releases |
 | **hyot-software-center** | https://github.com/furss123/hyot-software-center | Software catalog site (`data/software/*/`) |
 
 ## Product
 
-- **Name:** HyoT Image Tools v1.0.0
+- **Name:** HyoImage v1.0.0
 - **Platform:** Windows 10 22H2+ x64
 - **Stack:** Python 3.11, PyQt6, Pillow, rembg, opencv-python-headless, pytesseract, numpy
 - **12 tools:** compress, resize, convert, crop, bg_remove, rotate, watermark, merge, color_adjust, ocr, ai_upscale, bulk_rename
@@ -47,7 +47,7 @@ HyoT Image Tools/
 - Core + UI: **compress, resize, convert, crop, bg_remove, rotate, ocr, ai_upscale**
 - Models: FileItem (basic), ProcessResult, partial tool_options
 - Build: build.spec, scripts/build.py, installer, GitHub Actions release workflow
-- Software Center catalog JSON in `data/software/hyot-image-tools/` (lives in **hyot-software-center** repo)
+- Software Center catalog JSON in `data/software/hyoimage/` (lives in **hyot-software-center** repo)
 
 ### Still stub (`pass` only)
 - `app/core/worker.py`, `app/core/job.py` — batch job runner not wired to UI Run button
@@ -90,18 +90,18 @@ HyoT Image Tools/
 ```powershell
 pip install -r requirements.txt pyinstaller
 python scripts/build.py
-# Output: dist/HyoT-Image-Tools/
+# Output: dist/HyoImage/
 
 # Installer (Inno Setup 6)
 iscc installer\setup.iss
-# Output: dist/HyoT-Image-Tools-1.0.0-x64-setup.exe
+# Output: dist/HyoImage-1.0.0-x64-setup.exe
 ```
 
 **CI:** push tag `v*` → `.github/workflows/release.yml` builds setup + portable zip + sha256.txt → GitHub Release.
 
 ## Software Center Catalog
 
-Copy to `hyot-software-center/data/software/hyot-image-tools/`:
+Copy to `hyot-software-center/data/software/hyoimage/`:
 - `meta.json` — app metadata
 - `releases.json` — version assets (setup, portable, sha256 URLs)
 
@@ -134,6 +134,6 @@ git push origin main --tags
 ```
 
 Release assets:
-- `HyoT-Image-Tools-1.0.0-x64-setup.exe`
-- `HyoT-Image-Tools-1.0.0-x64-portable.zip`
+- `HyoImage-1.0.0-x64-setup.exe`
+- `HyoImage-1.0.0-x64-portable.zip`
 - `sha256.txt`

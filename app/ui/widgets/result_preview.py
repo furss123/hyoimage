@@ -26,7 +26,7 @@ class ResultPreviewWidget(QWidget):
         self._label = QLabel()
         self._label.setObjectName("resultPreview")
         self._label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self._label.setMinimumHeight(160)
+        self._label.setMinimumHeight(120)
         self._label.setSizePolicy(
             QSizePolicy.Policy.Expanding,
             QSizePolicy.Policy.Expanding,

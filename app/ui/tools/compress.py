@@ -34,7 +34,7 @@ class CompressToolWidget(BaseToolWidget):
         self._opt_row(tr("compress_target_kb"), self._target_edit)
 
         self._keep_format_cb = QCheckBox()
-        self._options_layout.addWidget(self._keep_format_cb)
+        self._add_option_checkbox(self._keep_format_cb)
 
         from app.ui.widgets.result_preview import ResultPreviewWidget
 

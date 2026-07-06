@@ -25,7 +25,7 @@ class CropCanvas(QWidget):
         self._loupe_size = 120
         self._loupe_zoom = 4
         self._loupe_src_size = 30
-        self.setMinimumHeight(300)
+        self.setMinimumHeight(220)
         self.setMouseTracking(True)
         self.setCursor(Qt.CursorShape.CrossCursor)
 
@@ -169,7 +169,7 @@ class CropCanvas(QWidget):
             p.fillRect(self.rect(), QColor(0, 0, 0, 120))
             p.setClipping(False)
 
-            p.setPen(QPen(QColor("#0078D4"), 1.5))
+            p.setPen(QPen(QColor("#006EE4"), 1.5))
             p.drawRect(self._crop_rect)
 
             p.setPen(QPen(QColor(255, 255, 255, 40), 0.5))
@@ -181,7 +181,7 @@ class CropCanvas(QWidget):
                 p.drawLine(r.x(), y, r.x() + r.width(), y)
 
             p.setPen(Qt.PenStyle.NoPen)
-            p.setBrush(QColor("#0078D4"))
+            p.setBrush(QColor("#006EE4"))
             h = self._handle_size
             for corner in self._get_handles():
                 p.drawRect(corner.x() - h // 2, corner.y() - h // 2, h, h)
@@ -233,14 +233,14 @@ class CropCanvas(QWidget):
 
         p.setClipping(False)
 
-        pen = QPen(QColor("#0078D4"), 2)
+        pen = QPen(QColor("#006EE4"), 2)
         p.setPen(pen)
         p.setBrush(Qt.BrushStyle.NoBrush)
         p.drawEllipse(loupe_rect)
 
         cx = loupe_rect.center().x()
         cy = loupe_rect.center().y()
-        p.setPen(QPen(QColor("#0078D4"), 1))
+        p.setPen(QPen(QColor("#006EE4"), 1))
         p.drawLine(cx - 8, cy, cx + 8, cy)
         p.drawLine(cx, cy - 8, cx, cy + 8)
 

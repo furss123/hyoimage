@@ -36,19 +36,19 @@ jobs:
 
       - name: Create portable ZIP
         run: |
-          Compress-Archive -Path dist\HyoT-Image-Tools -DestinationPath dist\HyoT-Image-Tools-1.0.1-x64-portable.zip
+          Compress-Archive -Path dist\HyoImage -DestinationPath dist\HyoImage-1.0.1-x64-portable.zip
         shell: pwsh
 
       - name: Generate SHA256 checksums
         run: |
-          certutil -hashfile dist\HyoT-Image-Tools-1.0.1-x64-setup.exe SHA256 | Out-File -Encoding utf8 sha256.txt
-          certutil -hashfile dist\HyoT-Image-Tools-1.0.1-x64-portable.zip SHA256 | Add-Content -Encoding utf8 sha256.txt
+          certutil -hashfile dist\HyoImage-1.0.1-x64-setup.exe SHA256 | Out-File -Encoding utf8 sha256.txt
+          certutil -hashfile dist\HyoImage-1.0.1-x64-portable.zip SHA256 | Add-Content -Encoding utf8 sha256.txt
         shell: pwsh
 
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/HyoT-Image-Tools-1.0.1-x64-setup.exe
-            dist/HyoT-Image-Tools-1.0.1-x64-portable.zip
+            dist/HyoImage-1.0.1-x64-setup.exe
+            dist/HyoImage-1.0.1-x64-portable.zip
             sha256.txt
