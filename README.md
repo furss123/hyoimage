@@ -4,7 +4,7 @@
   <img src="app/assets/icon.png" alt="HyoImage" width="96" height="96">
 </p>
 
-**Batch image processing for Windows** — resize, compress, convert, crop, rotate, merge, and rename photos in one desktop app. Every tool in the sidebar carries its own color from the HyoT brand palette (blue, purple, orange, teal), so you always know at a glance which tool you're in.
+**Batch image editing for Windows** — crop, rotate, resize, compress, convert, merge, and rename photos in one desktop app. Every tool in the sidebar carries its own color from the HyoT brand palette (blue, purple, orange, teal), so you always know at a glance which tool you're in.
 
 ![Main window](screenshots/main.png)
 
