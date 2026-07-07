@@ -4,10 +4,11 @@ import ctypes
 import importlib
 import os
 import sys
+import threading
 from pathlib import Path
 
 from PyQt6.QtGui import QGuiApplication
-from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtWidgets import (
     QApplication,
     QHBoxLayout,
@@ -35,6 +36,7 @@ from app.ui.toast import Toast
 from app.utils.icon import load_app_icon
 from app.utils.i18n import load, tr
 from app.utils.notify import play_completion_sound
+from app.utils.updater import install_ready_update, prepare_update
 
 _PREVIEW_TOOLS = frozenset({"resize", "rotate", "merge"})
 _HEADER_BTN_SIZE = 40
@@ -74,6 +76,9 @@ def set_title_bar_color(window, dark: bool) -> None:
 
 
 class MainWindow(QMainWindow):
+    update_ready = pyqtSignal(dict)
+    update_check_finished = pyqtSignal()
+
     def __init__(self, settings: Settings) -> None:
         super().__init__()
         self.settings = settings
@@ -81,6 +86,7 @@ class MainWindow(QMainWindow):
         self._tool_widgets: dict[str, QWidget] = {}
         self._tool_indices: dict[str, int] = {}
         self._worker: ConversionWorker | None = None
+        self._update_check_running = False
         self._initial_tool_id = (
             settings.last_tool
             if settings.last_tool in TOOL_IDS
@@ -101,7 +107,14 @@ class MainWindow(QMainWindow):
         if app is not None:
             app.setStyleSheet(get_stylesheet(settings.theme))
         self.retranslate()
+        self.update_ready.connect(self._show_update_ready)
+        self.update_check_finished.connect(self._finish_update_check)
         QTimer.singleShot(0, self._deferred_startup)
+        QTimer.singleShot(0, self._start_update_check)
+        self._update_timer = QTimer(self)
+        self._update_timer.setInterval(12 * 60 * 60 * 1000)
+        self._update_timer.timeout.connect(self._start_update_check)
+        self._update_timer.start()
 
     def _apply_initial_geometry(self) -> None:
         screen = QGuiApplication.primaryScreen()
@@ -123,6 +136,37 @@ class MainWindow(QMainWindow):
 
     def _deferred_startup(self) -> None:
         self._on_tool_selected(self._initial_tool_id)
+
+    def _start_update_check(self) -> None:
+        if self._update_check_running:
+            return
+        self._update_check_running = True
+
+        def worker() -> None:
+            try:
+                update = prepare_update()
+                if update:
+                    self.update_ready.emit(update)
+            finally:
+                self.update_check_finished.emit()
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def _finish_update_check(self) -> None:
+        self._update_check_running = False
+
+    def _show_update_ready(self, update: dict) -> None:
+        result = QMessageBox.question(
+            self,
+            "HyoImage Update",
+            f"HyoImage {update['version']} update is ready.\nRestart now to update?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No,
+        )
+        if result != QMessageBox.StandardButton.Yes:
+            return
+        install_ready_update(update["path"])
+        QApplication.quit()
 
     def _center_on_primary_screen(self) -> None:
         screen = QGuiApplication.primaryScreen()
